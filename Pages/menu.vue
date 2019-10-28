@@ -51,7 +51,7 @@ export default {
     },
     getList:function(){
       this.searching = true
-      axios.get('http://192.168.254.130:8000/cors/clients?search='+this.query)
+      axios.get('http://192.168.1.9:8000/cors/clients?search='+this.query)
       .then(res => {
         // console.log(res)
         this.client_list = res.data
