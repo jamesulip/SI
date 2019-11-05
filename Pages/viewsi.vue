@@ -43,7 +43,7 @@
         </nb-card-item>
       </nb-card>
 
-<nb-card>
+      <nb-card>
         <nb-card-item bordered>
           <nb-body>
             <nb-text class="headtext"><nb-icon class="headtext" :name="'contact'" />  Contact Person</nb-text>
@@ -56,6 +56,14 @@
         </nb-card-item>
       </nb-card>
      
+     <nb-card>
+        <nb-card-item bordered>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'pin'" /> Instruction</nb-text>
+            <nb-text class="detailstext">{{data.instruction}}</nb-text>
+          </nb-body>
+        </nb-card-item>
+      </nb-card>
       
     </nb-content>
   </nb-container>
