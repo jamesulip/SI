@@ -1,62 +1,99 @@
 <template>
-  <nb-container>
-    <nb-content>
+  <nb-container class='container'>
+    <nb-content v-if="data">
+
       <nb-card>
-        <nb-card-item header>
-          <nb-text>{{data.com_name}}</nb-text>
-        </nb-card-item>
         <nb-card-item bordered>
           <nb-body>
-            <nb-text>TIN:</nb-text>
-            <nb-text>{{data.tin}}</nb-text>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'business'" />  Project Name</nb-text>
+            <nb-text class="detailstext">Oc# {{data.num.toUpperCase()}}-{{data.project_name.toUpperCase()}}-{{data.clientx.com_name.toUpperCase()}}</nb-text>
           </nb-body>
         </nb-card-item>
         <nb-card-item bordered>
           <nb-body>
-            <nb-text>Address:</nb-text>
-            <nb-text>{{data.com_address}}</nb-text>
+            <nb-text class="headtext">Ocular Number</nb-text>
+            <nb-text class="detailstext">Oc# {{data.num}}</nb-text>
           </nb-body>
-        </nb-card-item >
+        </nb-card-item>
+        <nb-card-item bordered>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'people'" /> Client</nb-text>
+            <nb-text class="detailstext">{{data.clientx.com_name}}</nb-text>
+          </nb-body>
+        </nb-card-item>
+      </nb-card>
+      <nb-card>
+        <nb-card-item bordered>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'pin'" /> Address</nb-text>
+            <nb-text  @press='openurl(data.address)' class="detailstext">{{data.address}}</nb-text>
+          </nb-body>
+        </nb-card-item>
+      </nb-card>
+     <nb-card>
+        <nb-card-item bordered>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'time'" />  Date Requested</nb-text>
+            <nb-text class="detailstext">{{data.created_at}}</nb-text>
+          </nb-body>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'timer'" />   Schedule</nb-text>
+            <nb-text class="detailstext">{{data.schedule}}</nb-text>
+          </nb-body>
+        </nb-card-item>
       </nb-card>
 
-      <nb-card-item bordered>
-        <nb-body>
-          <table>
-            <row :data="tableHead" />
-            <rows :data="tableData" class="rows"/>
-          </table>
-        </nb-body>
-      </nb-card-item>
+<nb-card>
+        <nb-card-item bordered>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'contact'" />  Contact Person</nb-text>
+            <nb-text class="detailstext">{{data.contact_person}}</nb-text>
+          </nb-body>
+          <nb-body>
+            <nb-text class="headtext"><nb-icon class="headtext" :name="'call'" />   Contact Number</nb-text>
+            <nb-text class="detailstext" @press='calltext(data.contact_number)'>{{data.contact_number}}</nb-text>
+          </nb-body>
+        </nb-card-item>
+      </nb-card>
+     
+      
     </nb-content>
   </nb-container>
 </template>
 
 <style>
+.headtext{
+    font-size:12px
+}
+.detailstext{
+    color:gray;
+}
+.taable{
+    width: 100%;
+    font-weight: 700;
+}
 .rows{
   border-width: 2;
   border-color: #c8e1ff
 }
 .container {
-  align-items: center;
-
-  flex: 1;
-  padding: 50px;
-  padding-top:5px;
+ 
+  background-color:#ECF0F5;
 }
 .heading {
-  font-size: 15px;
-  font-weight: bold;
-  color: darkolivegreen;
-  margin: 10;
+  background-color: darkolivegreen;
 }
-.text {
-  text-align: center;
-  margin: 10px;
-}
+
 </style>
 
 <script>
 import { Table, Row, Rows } from 'react-native-table-component';
+import Vue from 'vue-native-core'
+ import {Linking } from 'react-native';
+import HTML from 'react-native-render-html'
+
+Vue.component('html', HTML)
+
 export default {
   components:{
      Table, Row, Rows
@@ -68,34 +105,23 @@ export default {
   },
   data() {
     return {
-      tableHead: ['Head', 'Head2', 'Head3', 'Head4'],
-      tableData: [
-        ['1', '2', '3', '4'],
-        ['a', 'b', 'c', 'd'],
-        ['1', '2', '3', '456\n789'],
-        ['a', 'b', 'c', 'd']
-      ],
-      data:{
-        "ID": "5d0c5337abd0d",
-        "com_address": 'Cecilia Chapman711-2880 Nulla St.Mankato Mississippi 96522(257) 563-7401',
-        "com_cathegory": null,
-        "com_industry": "123",
-        "com_name": "Tigergraphics",
-        "com_products": "123",
-        "com_vat": "Company",
-        "companycol": null,
-        "created_at": "2019-07-26 14:58:40",
-        "deleted_at": null,
-        "notes": null,
-        "salesExec": "WzSdAX57iu",
-        "updated_at": "2019-07-26 14:58:40",
-        'tin':'006-329-380-000'
-      },
+     
+      data: null,
+    }
+  },
+  methods: {
+    calltext(num){
+        Linking.openURL(`tel:${num}`);
+    },
+    openurl(url){
+     
+      Linking.openURL(`https://maps.google.com/?daddr=${url}`).catch(err => console.error("Couldn't load page", err));
     }
   },
   mounted(){
-    this.data = this.navigation.getParam('data') || this.data
-    //  console.log(this.navigation.getParam('data'))
+   
+    this.data = this.navigation.getParam('data') 
+    
   }
 }
 </script>

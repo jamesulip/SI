@@ -30,7 +30,7 @@ const StackNavigator = createStackNavigator({
   View:View
 }, 
 {
-  initialRouteName: 'View',
+  initialRouteName: 'Home',
 });
 
 const AppNavigator = createAppContainer(StackNavigator);

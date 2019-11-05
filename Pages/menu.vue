@@ -13,12 +13,12 @@
     <nb-list>
       <scroll-view>
         <nb-list-item itemDivider  v-if="query">
-           <nb-text>Search for '{{query}}' result {{client_list.length}}</nb-text>
+           <nb-text>Search for '{{query}}' result {{ocular_list.length}}</nb-text>
         </nb-list-item>
            <nb-spinner  v-if="searching"/>
-        <nb-list-item @press="alertx(client)" v-for="client in client_list" :key="client.ID" >
+        <nb-list-item @press="alertx(ocu)" v-for="(ocu,key) in ocular_list" :key="key" >
           <nb-left>
-            <nb-text>{{client.com_name}}</nb-text>
+            <nb-text>{{ocu.project_name}}</nb-text>
           </nb-left>
           <nb-right>
             <nb-icon name="arrow-forward" />
@@ -32,7 +32,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-       client_list:[],
+       ocular_list:[],
        client:{},
        query:'',
        searching:false
@@ -51,10 +51,10 @@ export default {
     },
     getList:function(){
       this.searching = true
-      axios.get('http://192.168.1.9:8000/cors/clients?search='+this.query)
+      axios.get('http://192.168.254.130:8000/cors/oculars?search='+this.query)
       .then(res => {
         // console.log(res)
-        this.client_list = res.data
+        this.ocular_list = res.data
         this.searching = false
       })
       .catch(err => {
