@@ -66,6 +66,9 @@
       </nb-card>
       
     </nb-content>
+
+    <actions/>
+
   </nb-container>
 </template>
 
@@ -85,7 +88,8 @@
   border-color: #c8e1ff
 }
 .container {
- 
+ padding-left: 10px;
+ padding-right: 10px;
   background-color:#ECF0F5;
 }
 .heading {
@@ -99,12 +103,12 @@ import { Table, Row, Rows } from 'react-native-table-component';
 import Vue from 'vue-native-core'
  import {Linking } from 'react-native';
 import HTML from 'react-native-render-html'
-
+import actions from "./buttons.vue";
 Vue.component('html', HTML)
 
 export default {
   components:{
-     Table, Row, Rows
+     Table, Row, Rows,actions
   },
   props: {
     navigation: {
@@ -115,6 +119,7 @@ export default {
     return {
      
       data: null,
+      
     }
   },
   methods: {

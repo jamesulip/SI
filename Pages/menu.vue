@@ -17,19 +17,15 @@
            <nb-text>Search for '{{query}}' result {{ocular_list.length}}</nb-text>
         </nb-list-item>
            <nb-spinner  v-if="searching"/>
-        <nb-list-item thumbnail @press="alertx(ocu)" v-for="(ocu,key) in ocular_list" :key="key" >
+        <nb-list-item selected thumbnail @press="alertx(ocu)" v-for="(ocu,key) in ocular_list" :key="key" :on-long-press="() => handleBtnPress(ocu)">
             <nb-body>
               <nb-text>OC#{{ocu.num}}</nb-Text>
               <nb-text note :numberOfLines="2">{{ocu.project_name}}</nb-Text>
             </nb-body>
+
               <nb-right>
-              <nb-button transparent>
-                <nb-icon :name="'timer'"></nb-icon>
-                <nb-text>
-                    {{formattedDate(ocu.schedule)}}
-                </nb-text>
-                
-              </nb-button>
+                  <nb-text note>{{ocu.Status}}</nb-text>
+                  <nb-text note>{{formattedDate(ocu.schedule)}}</nb-text>
             </nb-right>
         </nb-list-item>
     </nb-list>
@@ -46,13 +42,27 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import { ActionSheet,Toast } from "native-base";
 export default {
+  components:{
+    Toast
+  },
   data() {
     return {
        ocular_list:[],
        client:{},
        query:'',
-       searching:false
+       searching:false,
+
+
+      btnOptions: [
+        { text: "On My Way", icon: "car", iconColor: "#2c8ef4"  ,action:"On My Way"},
+        { text: "Done", icon: "checkmark", iconColor: "#f42ced" ,action:"Done" },
+        { text: "Cancel", icon: "close", iconColor: "#25de5b"  }
+      ],
+      optionCancelIndex: 2,
+    
+      clicked: 0
     }
   },
 
@@ -61,7 +71,51 @@ export default {
       type: Object
     }
   },
+  mounted() {
+   
+    this.getList()
+  },
   methods:{
+    handleBtnPress: function(x) {
+     
+      ActionSheet.show(
+        {
+          options: this.btnOptions,
+          cancelButtonIndex: this.optionCancelIndex,
+          destructiveButtonIndex: this.optionDestructiveIndex,
+          title: "Select Status"
+        },
+        buttonIndex => {
+          this.clicked = this.btnOptions[buttonIndex];
+          console.log(this.clicked)
+         if (this.clicked.action) {
+            
+            axios.patch(`http://192.168.1.7:8000/cors/ocularsup/${x.id}`, {
+               Status: this.clicked.action
+             })
+             .then(res => {
+                Toast.show({
+                  text: "Updating Successfully",
+                  buttonText: "Okay",
+                  duration:3000,
+                   type: "success"
+                });
+             })
+             .catch(err => {
+                Toast.show({
+                  text: "Updating Failed!",
+                  buttonText: "Okay",
+                  duration:3000,
+                   type: "danger"
+                });
+             }).then(x=>{
+               this.getList()
+             })
+         }
+          
+        }
+      );
+    },
     formattedDate(x) {
       // alert(x)
         return moment(x,'YYYY-MM-DD hh:mm a').format('MM/DD/YY');
@@ -80,8 +134,7 @@ export default {
         this.searching = false
       })
       .catch(err => {
-        console.error(err); 
-        alert('asds')
+          axios.post
       })
     }
   }
